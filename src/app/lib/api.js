@@ -1,5 +1,6 @@
 // API utility functions
 import { getApiUrl, API_CONFIG } from '../config/api';
+import { getMockData } from './mock-data';
 
 /**
  * Fetches complete course details from the API
@@ -88,6 +89,10 @@ function extractResults(data) {
  */
 export async function fetchAllDepartments() {
   try {
+    if (API_CONFIG.USE_MOCK_DATA) {
+      console.warn('Forcing mock data for all departments');
+      return extractResults(getMockData(API_CONFIG.departments.list()));
+    }
     const url = getApiUrl(API_CONFIG.departments.list());
     const response = await fetch(url, {
       method: 'GET',
@@ -102,6 +107,11 @@ export async function fetchAllDepartments() {
     return extractResults(data);
   } catch (error) {
     console.error('Error fetching all departments:', error);
+    // Fallback to mock data on network error
+    if (error.message.includes('fetch') || error.name === 'TypeError') {
+      console.warn('Using mock data for all departments');
+      return extractResults(getMockData(API_CONFIG.departments.list()));
+    }
     throw error;
   }
 }
@@ -112,6 +122,9 @@ export async function fetchAllDepartments() {
  */
 export async function fetchAllDepartmentCourses() {
   try {
+    if (API_CONFIG.USE_MOCK_DATA) {
+      return extractResults(getMockData(API_CONFIG.departmentCourses.list()));
+    }
     const url = getApiUrl(API_CONFIG.departmentCourses.list());
     const response = await fetch(url, {
       method: 'GET',
@@ -126,6 +139,9 @@ export async function fetchAllDepartmentCourses() {
     return extractResults(data);
   } catch (error) {
     console.error('Error fetching all department courses:', error);
+    if (error.message.includes('fetch') || error.name === 'TypeError') {
+      return extractResults(getMockData(API_CONFIG.departmentCourses.list()));
+    }
     throw error;
   }
 }
@@ -136,6 +152,9 @@ export async function fetchAllDepartmentCourses() {
  */
 export async function fetchAllCourses() {
   try {
+    if (API_CONFIG.USE_MOCK_DATA) {
+      return extractResults(getMockData(API_CONFIG.courses.list()));
+    }
     const url = getApiUrl(API_CONFIG.courses.list());
     const response = await fetch(url, {
       method: 'GET',
@@ -150,6 +169,9 @@ export async function fetchAllCourses() {
     return extractResults(data);
   } catch (error) {
     console.error('Error fetching all courses:', error);
+    if (error.message.includes('fetch') || error.name === 'TypeError') {
+      return extractResults(getMockData(API_CONFIG.courses.list()));
+    }
     throw error;
   }
 }
@@ -160,6 +182,9 @@ export async function fetchAllCourses() {
  */
 export async function fetchCollegePictures() {
   try {
+    if (API_CONFIG.USE_MOCK_DATA) {
+      return extractResults(getMockData(API_CONFIG.collegePictures.list()));
+    }
     const url = getApiUrl(API_CONFIG.collegePictures.list());
     const response = await fetch(url, {
       method: 'GET',
@@ -185,6 +210,9 @@ export async function fetchCollegePictures() {
  */
 export async function fetchDepartmentCourses(slugOrId) {
   try {
+    if (API_CONFIG.USE_MOCK_DATA) {
+      return extractResults(getMockData(API_CONFIG.departments.courses(slugOrId)));
+    }
     const url = getApiUrl(API_CONFIG.departments.courses(slugOrId));
     const response = await fetch(url, {
       method: 'GET',
@@ -384,6 +412,10 @@ export async function fetchDepartmentCourseCounts() {
  */
 export async function fetchAllDepartmentsCourses(programType = null, department = null) {
   try {
+    if (API_CONFIG.USE_MOCK_DATA) {
+      console.warn('Forcing mock data for all departments courses');
+      return getMockData(API_CONFIG.departments.allDepartmentsCourses(programType, department));
+    }
     const url = getApiUrl(API_CONFIG.departments.allDepartmentsCourses(programType, department));
     const response = await fetch(url, {
       method: 'GET',
@@ -398,6 +430,11 @@ export async function fetchAllDepartmentsCourses(programType = null, department 
     return data;
   } catch (error) {
     console.error(`Error fetching all departments courses${programType ? ` for ${programType}` : ''}${department ? ` in ${department}` : ''}:`, error);
+    // Fallback to mock data on network error
+    if (error.message.includes('fetch') || error.name === 'TypeError') {
+      console.warn('Using mock data for all departments courses');
+      return getMockData(API_CONFIG.departments.allDepartmentsCourses(programType, department));
+    }
     throw error;
   }
 }
@@ -408,6 +445,9 @@ export async function fetchAllDepartmentsCourses(programType = null, department 
  */
 export async function fetchDepartmentsCourses() {
   try {
+    if (API_CONFIG.USE_MOCK_DATA) {
+      return getMockData(API_CONFIG.departmentCourses.departmentsCourses());
+    }
     const url = getApiUrl(API_CONFIG.departmentCourses.departmentsCourses());
     const response = await fetch(url, {
       method: 'GET',
@@ -465,6 +505,10 @@ export async function updateDepartmentCourseCount(departmentId, courseCount) {
  */
 export async function fetchAllCourseAbout() {
   try {
+    if (API_CONFIG.USE_MOCK_DATA) {
+      console.warn('Forcing mock data for course-about');
+      return getMockData(API_CONFIG.courses.about()).results || [];
+    }
     let allResults = [];
     let nextUrl = getApiUrl(API_CONFIG.courses.about());
     let pageCount = 0;
@@ -520,6 +564,11 @@ export async function fetchAllCourseAbout() {
     return allResults;
   } catch (error) {
     console.error('Error fetching course-about data:', error);
+    // Fallback to mock data on network error
+    if (error.message.includes('fetch') || error.name === 'TypeError' || error.message.includes('Network error')) {
+      console.warn('Using mock data for course-about');
+      return getMockData(API_CONFIG.courses.about()).results || [];
+    }
     throw error;
   }
 }
@@ -531,6 +580,10 @@ export async function fetchAllCourseAbout() {
  */
 export async function fetchNewsEvents(params = {}) {
   try {
+    if (API_CONFIG.USE_MOCK_DATA) {
+      console.warn('Forcing mock data for news and events');
+      return getMockData(API_CONFIG.newsEvents.list());
+    }
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== null && value !== undefined && value !== '') {
@@ -555,6 +608,11 @@ export async function fetchNewsEvents(params = {}) {
     return data;
   } catch (error) {
     console.error('Error fetching news and events:', error);
+    // Fallback to mock data on network error
+    if (error.message.includes('fetch') || error.name === 'TypeError') {
+      console.warn('Using mock data for news and events');
+      return getMockData(API_CONFIG.newsEvents.list());
+    }
     throw error;
   }
 }

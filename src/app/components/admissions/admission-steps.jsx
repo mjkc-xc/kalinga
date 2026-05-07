@@ -84,8 +84,15 @@ export default function AdmissionSteps({
 
   const bindNavigation = (swiperInstance) => {
     if (!swiperInstance || !prevRef.current || !nextRef.current) return;
+    
+    // Ensure navigation params exist
+    if (!swiperInstance.params.navigation) {
+      swiperInstance.params.navigation = {};
+    }
+    
     swiperInstance.params.navigation.prevEl = prevRef.current;
     swiperInstance.params.navigation.nextEl = nextRef.current;
+    
     if (swiperInstance.navigation) {
       swiperInstance.navigation.destroy();
       swiperInstance.navigation.init();
@@ -235,8 +242,10 @@ export default function AdmissionSteps({
             prevEl: prevRef.current,
           }}
           onBeforeInit={(swiper) => {
-            swiper.params.navigation.prevEl = prevRef.current;
-            swiper.params.navigation.nextEl = nextRef.current;
+            if (swiper.params.navigation) {
+              swiper.params.navigation.prevEl = prevRef.current;
+              swiper.params.navigation.nextEl = nextRef.current;
+            }
           }}
           onSwiper={(swiper) => {
             swiperRef.current = swiper;

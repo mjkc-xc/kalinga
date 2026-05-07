@@ -1,6 +1,7 @@
 // Global API Configuration
 export const API_CONFIG = {
   baseURL: 'https://kalinga.dupebox.com/api',
+  USE_MOCK_DATA: true, // Forced true because backend is unreachable
 
   // Course endpoints
   courses: {

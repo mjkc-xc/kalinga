@@ -47,13 +47,13 @@ if (typeof window === 'undefined' && typeof global !== 'undefined') {
 }
 
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Header from "./components/layout/Header";
 import Breadcrumb from "./components/layout/Breadcrumb";
 import Footer from "./components/layout/Footer";
 import ClickSparkWrapper from "./components/layout/ClickSparkWrapper";
 import { FlipbookProvider } from "./components/general/FlipbookContext";
-import ChatbotPopup from "./components/layout/ChatbotPopup";
 import { ChatbotProvider } from "./components/layout/ChatbotContext";
 
 const geistSans = Geist({
@@ -106,7 +106,9 @@ export default function RootLayout({ children }) {
           <FlipbookProvider>
             <ClickSparkWrapper>
               <Header />
-              <script
+              <Script
+                id="scroll-restoration"
+                strategy="afterInteractive"
                 dangerouslySetInnerHTML={{
                   __html: `
                     if (typeof history !== 'undefined') history.scrollRestoration = 'manual';
@@ -122,9 +124,9 @@ export default function RootLayout({ children }) {
                       )) {
                         return;
                       }
-              originalError.apply(console, args);
+                      originalError.apply(console, args);
                     };
-              `
+                  `
                 }}
               />
               <main className="min-h-screen">
@@ -132,10 +134,25 @@ export default function RootLayout({ children }) {
                 {children}
               </main>
               <Footer />
-              <ChatbotPopup />
             </ClickSparkWrapper>
           </FlipbookProvider>
         </ChatbotProvider>
+        
+        {/* NPF Chatbot Integration */}
+        <div className="npf_chatbots" data-w="83d92d42d8cc4c839d761d929fc3211c" style={{ display: 'none' }}></div>
+        <Script 
+          id="npf-chatbot"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              var s=document.createElement("script"); 
+              s.type="text/javascript"; 
+              s.async=true; 
+              s.src="https://chatbot.in1.nopaperforms.com/en-gb/backend/bots/niaachtbtscpt.js/6426019081578b6b/83d92d42d8cc4c839d761d929fc3211c"; 
+              document.body.appendChild(s);
+            `
+          }}
+        />
       </body>
     </html>
   );
