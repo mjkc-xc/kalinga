@@ -22,7 +22,7 @@ function Admissionhacks() {
             description:
                 "Opt for high-demanding careers like AI, ML, Cybersecurity, Designing, Management, Engineering, Law, Pharmacy, and more.",
             icon: "",
-            imageUrl: "https://kalinga-university.s3.amazonaws.com/kalinga_backend/files/course/career_icons/businessman_1.svg",
+            imageUrl: "https://cdn.kalingauniversity.ac.in/kalinga_backend/files/course/career_icons/businessman_1.svg",
         },
         {
             title: "Prioritise Colleges Offering Placements",

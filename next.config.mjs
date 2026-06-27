@@ -18,10 +18,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'cdn.kalingauniversity.ac.in',
       },
-      {
-        protocol: 'https',
-        hostname: 'kalinga-university.s3.amazonaws.com',
-      },
+
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
